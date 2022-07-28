@@ -33,7 +33,7 @@ const (
 	headerPadding          = 2
 
 	// verbose view formatting
-	outlinePadding = 7
+	outlinePadding = 8
 
 	// can't get terminal dimensions on startup, so use this
 	initialDimensionVal = 30
@@ -57,7 +57,8 @@ const (
 	colSpotPrice          = "Spot Price/Hr (30 day avg)"
 
 	// controls
-	controlsString = "Controls: ↑/↓ - up/down • ←/→  - left/right • shift + ←/→ - pg up/down • q - quit"
+	tableControls   = "Controls: ↑/↓ - up/down • ←/→  - left/right • shift + ←/→ - pg up/down • enter - expand • q - quit"
+	verboseControls = "Controls: ↑/↓ - up/down • enter - return to table • q - quit"
 
 	// table states
 	stateTable   = "table"
@@ -120,7 +121,7 @@ func (m BubbleTeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "esc", "q":
+		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "enter":
 			switch m.state {
@@ -156,7 +157,7 @@ func (m BubbleTeaModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.TableModel, cmd = m.TableModel.Update(msg)
 
 		// update footer
-		controlsStr := lipgloss.NewStyle().Faint(true).Render(controlsString)
+		controlsStr := lipgloss.NewStyle().Faint(true).Render(tableControls)
 		footerStr := fmt.Sprintf("Page: %d/%d | %s", m.TableModel.CurrentPage(), m.TableModel.MaxPages(), controlsStr)
 		m.TableModel = m.TableModel.WithStaticFooter(footerStr)
 
@@ -193,6 +194,10 @@ func (m BubbleTeaModel) View() string {
 		pagePercentage := infoStyle.Render(fmt.Sprintf("%3.f%%", m.verboseView.viewport.ScrollPercent()*100))
 		line = strings.Repeat("─", int(math.Max(0, float64(m.verboseView.viewport.Width-lipgloss.Width(pagePercentage)))))
 		outputStr.WriteString(lipgloss.JoinHorizontal(lipgloss.Center, line, pagePercentage))
+		outputStr.WriteString("\n")
+
+		// controls
+		outputStr.WriteString(lipgloss.NewStyle().Faint(true).Render(verboseControls))
 		outputStr.WriteString("\n")
 	}
 
