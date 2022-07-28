@@ -59,32 +59,12 @@ const (
 	// controls
 	tableControls   = "Controls: ↑/↓ - up/down • ←/→  - left/right • shift + ←/→ - pg up/down • enter - expand • q - quit"
 	verboseControls = "Controls: ↑/↓ - up/down • enter - return to table • q - quit"
+)
 
+const (
 	// table states
 	stateTable   = "table"
 	stateVerbose = "verbose"
-)
-
-var (
-	customBorder = table.Border{
-		Top:    "─",
-		Left:   "│",
-		Right:  "│",
-		Bottom: "─",
-
-		TopRight:    "╮",
-		TopLeft:     "╭",
-		BottomRight: "╯",
-		BottomLeft:  "╰",
-
-		TopJunction:    "┬",
-		LeftJunction:   "├",
-		RightJunction:  "┤",
-		BottomJunction: "┴",
-		InnerJunction:  "┼",
-
-		InnerDivider: "│",
-	}
 )
 
 // BubbleTeaModel is used to hold the state of the bubble tea TUI
@@ -204,7 +184,29 @@ func (m BubbleTeaModel) View() string {
 	return outputStr.String()
 }
 
-// table creation helpers:
+// table helpers:
+
+var (
+	customBorder = table.Border{
+		Top:    "─",
+		Left:   "│",
+		Right:  "│",
+		Bottom: "─",
+
+		TopRight:    "╮",
+		TopLeft:     "╭",
+		BottomRight: "╯",
+		BottomLeft:  "╰",
+
+		TopJunction:    "┬",
+		LeftJunction:   "├",
+		RightJunction:  "┤",
+		BottomJunction: "┴",
+		InnerJunction:  "┼",
+
+		InnerDivider: "│",
+	}
+)
 
 // createRows creates a row for each instance type in the passed in list
 func createRows(instanceTypes []*instancetypes.Details) *[]table.Row {
